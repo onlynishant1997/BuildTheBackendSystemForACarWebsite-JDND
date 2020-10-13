@@ -34,11 +34,10 @@ public class CarService {
      */
     public List<Car> list() {
         List<Car> carList =  repository.findAll();
-        for(Car car : carList) {
-            car.setPrice(pClient.getPrice(car.getId()));
-            car.setLocation(mClient.getAddress(car.getLocation()));
-        }
-        
+        carList.stream().forEach(car -> {
+        	car.setPrice(pClient.getPrice(car.getId()));
+        	car.setLocation(mClient.getAddress(car.getLocation()));
+        	});
         return carList;
     }
 
@@ -48,19 +47,15 @@ public class CarService {
      * @return the requested car's information, including location and price
      */
     public Car findById(Long id) {
-        
 	Optional<Car> carOptional = repository.findById(id);
 	if(!carOptional.isPresent()) {
 	    throw new CarNotFoundException("Car with this id does not exist");
 	}
         Car car = carOptional.get();
-
         String carPrice = pClient.getPrice(id);
         car.setPrice(carPrice);
-
         Location carLocation = mClient.getAddress(car.getLocation());
         car.setLocation(carLocation);
-        
         return car;
     }
 
@@ -80,7 +75,6 @@ public class CarService {
                         return repository.save(carToBeUpdated);
                     }).orElseThrow(CarNotFoundException::new);
         } else {
-            
             savedCar = repository.save(car);
         }
         

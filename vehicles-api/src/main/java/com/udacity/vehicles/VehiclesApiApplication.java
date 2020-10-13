@@ -1,3 +1,4 @@
+
 package com.udacity.vehicles;
 
 import com.udacity.vehicles.domain.manufacturer.Manufacturer;
